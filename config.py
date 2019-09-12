@@ -1,4 +1,6 @@
 class Config:
+    seed = 42
+
     bos_id = 4
     eos_id = 5
     pad_id = 3

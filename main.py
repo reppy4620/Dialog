@@ -1,17 +1,17 @@
 import pickle
 
+import sentencepiece as spm
 import torch
 import torch.optim as optim
 from torch.utils.data import DataLoader
 
-import sentencepiece as spm
-
 from config import Config
 from nn import Seq2SeqModel, LabelSmoothing, get_optimizer
-from utils import DialogDataset, train
-
+from utils import DialogDataset, train, seed_everything
 
 if __name__ == '__main__':
+
+    seed_everything(Config.seed)
 
     start_epoch = 0
 
