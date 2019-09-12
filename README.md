@@ -52,7 +52,7 @@ If occur errors because of package, please install missing package.
 
 Idea of Loss and Optimizer comes from The Annotated Transformer i denote below.
 
-If you wanna more information about architecture of BERT or Transformer, please refer to the following blog.
+If you want more information about architecture of BERT or Transformer, please refer to the following blog.
 
 - [The Annotated Transformer](http://nlp.seas.harvard.edu/2018/04/03/attention.html)
 - [The Illustrated Transformer](http://jalammar.github.io/illustrated-transformer/)
