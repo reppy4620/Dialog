@@ -1,14 +1,14 @@
-from argparse import ArgumentParser
-from pathlib import Path
-from tqdm import tqdm, trange
-from multiprocessing import Pool
-
-from random import random, randrange, randint, shuffle, choice
-from bert.tokenizer import Tokenizer
-import numpy as np
-import json
 import collections
+import json
+from argparse import ArgumentParser
+from multiprocessing import Pool
+from pathlib import Path
+from random import random, randrange, randint, shuffle, choice
 
+import numpy as np
+from tqdm import tqdm, trange
+
+from .tokenizer import Tokenizer
 
 mask_token = '<mask>'
 sep_token = '<sep>'
@@ -80,8 +80,6 @@ def truncate_seq_pair(tokens_a, tokens_b, max_num_tokens):
         trunc_tokens = tokens_a if len(tokens_a) > len(tokens_b) else tokens_b
         assert len(trunc_tokens) >= 1
 
-        # We want to sometimes truncate from the front and sometimes from the
-        # back to add more randomness and avoid biases.
         if random() < 0.5:
             del trunc_tokens[0]
         else:
@@ -99,15 +97,6 @@ def create_masked_lm_predictions(tokens, masked_lm_prob, max_predictions_per_seq
     for (i, token) in enumerate(tokens):
         if token == cls_token or token == sep_token:
             continue
-        # Whole Word Masking means that if we mask all of the wordpieces
-        # corresponding to an original word. When a word has been split into
-        # WordPieces, the first token does not have any marker and any subsequence
-        # tokens are prefixed with ##. So whenever we see the ## token, we
-        # append it to the previous set of word indexes.
-        #
-        # Note that Whole Word Masking does *not* change the training code
-        # at all -- we still predict each WordPiece independently, softmaxed
-        # over the entire vocabulary.
         if whole_word_mask and len(cand_indices) >= 1:
             cand_indices[-1].append(i)
         else:
@@ -159,30 +148,14 @@ def create_masked_lm_predictions(tokens, masked_lm_prob, max_predictions_per_seq
 def create_instances_from_document(
         doc_database, doc_idx, max_seq_length, short_seq_prob,
         masked_lm_prob, max_predictions_per_seq, whole_word_mask, vocab_list):
-    """This code is mostly a duplicate of the equivalent function from Google BERT's repo.
-    However, we make some changes and improvements. Sampling is improved and no longer requires a loop in this function.
-    Also, documents are sampled proportionally to the number of sentences they contain, which means each sentence
-    (rather than each document) has an equal chance of being sampled as a false example for the NextSentence task."""
     document = doc_database[doc_idx]
     # Account for [CLS], [SEP], [SEP]
     max_num_tokens = max_seq_length - 3
 
-    # We *usually* want to fill up the entire sequence since we are padding
-    # to `max_seq_length` anyways, so short sequences are generally wasted
-    # computation. However, we *sometimes*
-    # (i.e., short_seq_prob == 0.1 == 10% of the time) want to use shorter
-    # sequences to minimize the mismatch between pre-training and fine-tuning.
-    # The `target_seq_length` is just a rough target however, whereas
-    # `max_seq_length` is a hard limit.
     target_seq_length = max_num_tokens
     if random() < short_seq_prob:
         target_seq_length = randint(2, max_num_tokens)
 
-    # We DON'T just concatenate all of the tokens from a document into a long
-    # sequence and choose an arbitrary split point because this would make the
-    # next sentence prediction task too easy. Instead, we split the input into
-    # segments "A" and "B" based on the actual "sentences" provided by the user
-    # input.
     instances = []
     current_chunk = []
     current_length = 0
@@ -193,8 +166,7 @@ def create_instances_from_document(
         current_length += len(segment)
         if i == len(document) - 1 or current_length >= target_seq_length:
             if current_chunk:
-                # `a_end` is how many segments from `current_chunk` go into the `A`
-                # (first) sentence.
+
                 a_end = 1
                 if len(current_chunk) >= 2:
                     a_end = randrange(1, len(current_chunk))
@@ -218,8 +190,7 @@ def create_instances_from_document(
                         tokens_b.extend(random_document[j])
                         if len(tokens_b) >= target_b_length:
                             break
-                    # We didn't actually use these segments so we "put them back" so
-                    # they don't go to waste.
+
                     num_unused_segments = len(current_chunk) - a_end
                     i -= num_unused_segments
                 # Actual next
@@ -233,8 +204,7 @@ def create_instances_from_document(
                 assert len(tokens_b) >= 1
 
                 tokens = [cls_token] + tokens_a + [sep_token] + tokens_b + [sep_token]
-                # The segment IDs are 0 for the [CLS] token, the A tokens and the first [SEP]
-                # They are 1 for the B tokens and the final [SEP]
+
                 segment_ids = [0 for _ in range(len(tokens_a) + 2)] + [1 for _ in range(len(tokens_b) + 1)]
 
                 tokens, masked_lm_positions, masked_lm_labels = create_masked_lm_predictions(
@@ -314,7 +284,7 @@ def main():
                     tokens = tokenizer.tokenize(line)
                     doc.append(tokens)
             if doc:
-                docs.add_document(doc)  # If the last doc didn't end on a newline, make sure it still gets added
+                docs.add_document(doc)
         if len(docs) <= 1:
             exit("ERROR")
 

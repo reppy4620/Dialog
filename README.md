@@ -26,6 +26,7 @@ Maybe, Needed packages are
 If occur errors because of package, please install missing package.
 
 ### Prepare conversation data.  
+
 - I used twitter data that is scraped using [this](https://qiita.com/gacky01/items/89c6c626848417391438)
 
 - Normalized sentence(e.g. remove punctuations...) and encode to ids using SentencePiece.
@@ -36,7 +37,8 @@ If occur errors because of package, please install missing package.
 # q is input sentence, a is target sentence.
 [(q1, a1), (q2, a2), (q3, a3), ...]
 ```
-
+training data:  [this](https://drive.google.com/open?id=1VAL11Bv0sTo05x4ZeYpW7WXCWLkdwiJW)  
+Please use pkl data if you wanna train.
 - Change path in config.py
 
 - start training

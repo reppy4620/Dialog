@@ -40,13 +40,11 @@ class MultiHeadAttention(nn.Module):
         super(MultiHeadAttention, self).__init__()
         # Warning d_model mod h is not zero
         # because cause that cannot make Multi-Head.
-        # d_model mod h が0出なければエラー
         assert d_model % h == 0
         self.d_k = d_model // h
         self.h = h
 
         # Weight of doing linear transformation
-        # 線形変換のための重み
         self.w_q = nn.Linear(d_model, d_model)
         self.w_k = nn.Linear(d_model, d_model)
         self.w_v = nn.Linear(d_model, d_model)
@@ -54,7 +52,6 @@ class MultiHeadAttention(nn.Module):
         self.linear = nn.Linear(d_model, d_model)
 
         # Just to be sure, hold the attention score.
-        # 念のため注意のスコアを保存
         self.attn = None
         self.dropout = nn.Dropout(drop_rate)
 
@@ -67,7 +64,6 @@ class MultiHeadAttention(nn.Module):
         n_batches = query.size(0)
 
         # Simple Linear Transformation
-        # 線形変換
         # B x h x d_model x d_k
         query = self.w_q(query).contiguous().view(n_batches, -1, self.h, self.d_k).transpose(1, 2)
         key = self.w_k(key).contiguous().view(n_batches, -1, self.h, self.d_k).transpose(1, 2)

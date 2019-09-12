@@ -1,20 +1,20 @@
-from argparse import ArgumentParser
-from pathlib import Path
-import torch
-import logging
 import json
+import logging
 import random
-import numpy as np
+from argparse import ArgumentParser
 from collections import namedtuple
+from pathlib import Path
 
+import numpy as np
+import torch
+from pytorch_transformers.modeling_bert import BertForPreTraining
+from pytorch_transformers.optimization import AdamW, WarmupLinearSchedule
 from torch.utils.data import DataLoader, Dataset, RandomSampler
 from torch.utils.data.distributed import DistributedSampler
 from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
-from bert.tokenizer import Tokenizer
 
-from pytorch_transformers.modeling_bert import BertForPreTraining
-from pytorch_transformers.optimization import AdamW, WarmupLinearSchedule
+from .tokenizer import Tokenizer
 
 InputFeatures = namedtuple("InputFeatures", "input_ids input_mask segment_ids lm_label_ids is_next")
 
@@ -231,19 +231,6 @@ def main():
     scheduler = WarmupLinearSchedule(optimizer, warmup_steps=args.warmup_steps,
                                      t_total=num_train_optimization_steps)
 
-    if args.fp16:
-        try:
-            # from apex.optimizers import FP16_Optimizer
-            # from apex.optimizers import FusedAdam
-            from apex import amp
-        except ImportError:
-            raise ImportError(
-                "Please install apex from https://www.github.com/nvidia/apex to use distributed and fp16 training.")
-
-        # This below line of code is the main upgrade of Apex Fp16 implementation. I chose opt_leve="01"
-        # because it's recommended for typical use by Apex. We can make it configured
-        model, optimizer = amp.initialize(model, optimizer, opt_level="O1")
-
     global_step = 0
     logging.info("***** Running training *****")
     logging.info(f"  Num examples = {total_train_examples}")
@@ -269,13 +256,7 @@ def main():
 
                 if args.gradient_accumulation_steps > 1:
                     loss = loss / args.gradient_accumulation_steps
-                if args.fp16:
-                    # I depricate FP16_Optimizer's backward func and replace as Apex document
-                    # optimizer.backward(loss)
-                    with amp.scale_loss(loss, optimizer) as scaled_loss:
-                        scaled_loss.backward()
-                else:
-                    loss.backward()
+                loss.backward()
                 tr_loss += loss.item()
                 nb_tr_examples += input_ids.size(0)
                 nb_tr_steps += 1
@@ -285,7 +266,7 @@ def main():
                 writer.add_scalar('Loss/train', mean_loss, (epoch + 1) * step)
                 if (step + 1) % args.gradient_accumulation_steps == 0:
                     optimizer.step()
-                    scheduler.step(epoch)  # Update learning rate schedule
+                    scheduler.step(epoch)
                     optimizer.zero_grad()
                     global_step += 1
 
