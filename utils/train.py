@@ -1,8 +1,14 @@
-import torch
+#  Copyright (c) 2019. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+#  Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+#  Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+#  Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+#  Vestibulum commodo. Ut rhoncus gravida arcu.
 
+import torch
 from tqdm import tqdm
-from transformer.utils import subsequent_mask
-from utils import Batch
+
+from .batch import Batch
+from .helper import subsequent_mask
 
 
 def train(config, model, optimizer, criterion, data_loader,

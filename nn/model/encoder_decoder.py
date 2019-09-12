@@ -1,8 +1,14 @@
+#  Copyright (c) 2019. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+#  Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+#  Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+#  Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+#  Vestibulum commodo. Ut rhoncus gravida arcu.
+
 import torch.nn as nn
 
+from .decoder import build_decoder
 from .embedding import build_embedding
 from .encoder import Encoder
-from .decoder import build_decoder
 from .generator import Generator
 
 
@@ -24,11 +30,11 @@ class Seq2SeqModel(nn.Module):
         self.generator = Generator(d_model, vocab_size)
 
         for param in self.decoder.parameters():
-            if param.dim > 1:
+            if param.dim() > 1:
                 nn.init.xavier_uniform_(param)
         
         for param in self.generator.parameters():
-            if param.dim > 1:
+            if param.dim() > 1:
                 nn.init.xavier_uniform_(param)
 
     def forward(self, source, source_mask, target, target_mask):
