@@ -7,8 +7,11 @@ download pretrained model from [this](https://github.com/yoheikikuta/bert-japane
 and change path in config.py
 if you wanna train using this code.  
 
-## Usage
-Install packages.  
+I started training in (12/9/2019) with 1 GTX1080Ti.  
+In training, i'm able to use 256 batch size with 12 token.
+
+# Usage
+### Install packages.  
 ```bash
 $ pip install -r requirements.txt
 ```
@@ -20,23 +23,25 @@ Maybe, Needed packages are
 - sentencepiece
 - tqdm
 
-Prepare conversation data.  
-1.I used twitter data that is scraped using [this](https://qiita.com/gacky01/items/89c6c626848417391438)
+If occur errors because of package, please install missing package.
 
-2.Normalized sentence(e.g. remove punctuations...) and encode sequence to ids using SentencePiece.
+### Prepare conversation data.  
+- I used twitter data that is scraped using [this](https://qiita.com/gacky01/items/89c6c626848417391438)
 
-3.Convert to pkl from sentence pair  
+- Normalized sentence(e.g. remove punctuations...) and encode to ids using SentencePiece.
+
+- Convert to pkl from sentence pair  
 ```
 # architecture
 # q is input sentence, a is target sentence.
 [(q1, a1), (q2, a2), (q3, a3), ...]
 ```
 
-4.Change path in config.py
+- Change path in config.py
 
-5.start training
+- start training
 
-## Architecture
+# Architecture
 - Encoder: BERT  
 - Decoder: Vanilla Transformer Decoder
 

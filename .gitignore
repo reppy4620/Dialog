@@ -130,6 +130,7 @@ pretrained/
 
 data/
 
-bert_pretraining/pretraining/model
-bert_pretraining/pretraining/training
-bert_pretraining/pretraining/organized_data.txt
+.idea/vcs.xml
+bert_pretraining/model/
+bert_pretraining/organized_data.txt
+bert_pretraining/training/
