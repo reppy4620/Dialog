@@ -42,13 +42,15 @@ If occur errors because of package, please install missing package.
 - start training
 
 # Architecture
-- Encoder: BERT  
-- Decoder: Vanilla Transformer Decoder
+- Encoder: BERT-[arxiv](https://arxiv.org/abs/1810.04805)  
+- Decoder: Vanilla Transformer Decoder-[arxiv](https://arxiv.org/abs/1706.03762)
 
 - Loss: KLDivLoss with LabelSmoothing
 - Optimizer: Adam with warm-up
 
 - Tokenizer: SentencePiece(trained wiki-japanese)
+
+Idea of Loss and Optimizer comes from The Annotated Transformer i denote below.
 
 If you wanna more information about architecture of BERT or Transformer, please refer to the following blog.
 
