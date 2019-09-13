@@ -3,7 +3,7 @@ Dialog is japanese chatbot project.
 Seq2Seq model has BERT Encoder and Transformer Decoder.
 
 Note that you have to prepare the conversation data,
-download pretrained model from [this](https://github.com/yoheikikuta/bert-japanese)
+download pretrained model from [this](https://drive.google.com/drive/folders/1Zsm9DD40lrUVu6iAnIuTH2ODIkh-WM-O)
 and change path in config.py
 if you wanna train using this code.  
 
@@ -24,6 +24,10 @@ Maybe, Needed packages are
 - tqdm
 
 If occur errors because of package, please install missing package.
+
+### Download Pretrained model
+Download -> (Pretrained BERT model and trained SentencePiece model)[https://drive.google.com/drive/folders/1Zsm9DD40lrUVu6iAnIuTH2ODIkh-WM-O]  
+and change path in config.py
 
 ### Prepare conversation data.  
 
