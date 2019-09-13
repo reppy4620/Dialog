@@ -26,7 +26,7 @@ Maybe, Needed packages are
 If occur errors because of package, please install missing package.
 
 ### Download Pretrained model
-Download -> (Pretrained BERT model and trained SentencePiece model)[https://drive.google.com/drive/folders/1Zsm9DD40lrUVu6iAnIuTH2ODIkh-WM-O]  
+Download -> [Pretrained BERT model and trained SentencePiece model](https://drive.google.com/drive/folders/1Zsm9DD40lrUVu6iAnIuTH2ODIkh-WM-O)  
 and change path in config.py
 
 ### Prepare conversation data.  
