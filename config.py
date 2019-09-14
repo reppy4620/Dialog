@@ -1,5 +1,6 @@
 class Config:
     seed = 42
+    cuda = True
 
     bos_id = 4
     eos_id = 5

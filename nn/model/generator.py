@@ -5,7 +5,7 @@ import torch.nn.functional as F
 
 class Generator(nn.Module):
 
-    def __init__(self, d_model: int, vocab: int):
+    def __init__(self, d_model, vocab):
         super(Generator, self).__init__()
         self.layer = nn.Linear(d_model, vocab)
 

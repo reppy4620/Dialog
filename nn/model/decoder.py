@@ -5,19 +5,19 @@ from .attention import SourceTargetAttention, SelfAttention
 from .ffn import FFN
 
 
-def build_decoder(N: int = 6, h: int = 8, d_model: int = 512,
-                  d_ff: int = 2048, drop_rate: float = 0.1):
+def build_decoder(N=6, h=8, d_model=512, d_ff=2048, drop_rate=0.1):
     decoder_layers = [DecoderLayer(h, d_model, d_ff, drop_rate) for _ in range(N)]
-    decoder = Decoder(nn.ModuleList(decoder_layers))
+    decoder = Decoder(nn.ModuleList(decoder_layers), d_model)
     return decoder
 
 
 class Decoder(nn.Module):
 
-    def __init__(self, layers: nn.ModuleList):
+    def __init__(self, layers, d_model):
         super(Decoder, self).__init__()
         # decoder layers
         self.layers = layers
+        self.norm = nn.LayerNorm(d_model)
 
     def forward(self,
                 x: torch.FloatTensor, memory: torch.FloatTensor,
@@ -27,12 +27,12 @@ class Decoder(nn.Module):
         # note that memory is passed through encoder
         for layer in self.layers:
             x = layer(x, memory, source_mask, target_mask)
-        return x
+        return self.norm(x)
 
 
 class DecoderLayer(nn.Module):
 
-    def __init__(self, h: int = 8, d_model: int = 512, d_ff: int = 2048, drop_rate: float = 0.1):
+    def __init__(self, h=8, d_model=512, d_ff=2048, drop_rate=0.1):
         super(DecoderLayer, self).__init__()
 
         # Self Attention Layer
@@ -44,9 +44,7 @@ class DecoderLayer(nn.Module):
         self.st_attn = SourceTargetAttention(h, d_model, drop_rate)
         self.ff = FFN(d_model, d_ff)
 
-    def forward(self, x: torch.FloatTensor, mem: torch.FloatTensor,
-                source_mask: torch.Tensor, target_mask: torch.Tensor
-                ) -> torch.FloatTensor:
+    def forward(self, x, mem, source_mask, target_mask):
         # self attention
         x = self.self_attn(x, target_mask)
         # source target attention

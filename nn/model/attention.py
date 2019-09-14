@@ -8,7 +8,7 @@ import torch.nn.functional as F
 
 class AttentionLayer(nn.Module, ABC):
 
-    def __init__(self, h: int = 8, d_model: int = 512, drop_rate: float = 0.1):
+    def __init__(self, h=8, d_model=512, drop_rate=0.1):
         super(AttentionLayer, self).__init__()
 
         self.multi_attn = MultiHeadAttention(h, d_model, drop_rate)
@@ -19,24 +19,27 @@ class AttentionLayer(nn.Module, ABC):
 class SelfAttention(AttentionLayer):
 
     def forward(self, x, target_mask):
-        out = self.multi_attn(x, x, x, target_mask)
+        # out = self.multi_attn(x, x, x, target_mask)
+        # out = self.dropout(out)
+        # out = self.norm(x + out)
+        out = self.norm(x)
+        out = self.multi_attn(out, out, out, target_mask)
         out = self.dropout(out)
-        out = self.norm(x + out)
-        return out
+        return out + x
 
 
 class SourceTargetAttention(AttentionLayer):
 
     def forward(self, mem, x, source_mask):
-        out = self.multi_attn(x, mem, mem, source_mask)
+        out = self.norm(x)
+        out = self.multi_attn(out, mem, mem, source_mask)
         out = self.dropout(out)
-        out = self.norm(x + out)
-        return out
+        return out + x
 
 
 class MultiHeadAttention(nn.Module):
 
-    def __init__(self, h: int = 8, d_model: int = 512, drop_rate: float = 0.1):
+    def __init__(self, h=8, d_model=512, drop_rate=0.1):
         super(MultiHeadAttention, self).__init__()
         # Warning d_model mod h is not zero
         # because cause that cannot make Multi-Head.
@@ -55,10 +58,7 @@ class MultiHeadAttention(nn.Module):
         self.attn = None
         self.dropout = nn.Dropout(drop_rate)
 
-    def forward(self,
-                query: torch.FloatTensor, key: torch.FloatTensor,
-                value: torch.FloatTensor, mask: torch.Tensor = None
-                ) -> torch.FloatTensor:
+    def forward(self, query, key, value, mask):
         if mask is not None:
             mask = mask.unsqueeze(1)
         n_batches = query.size(0)
@@ -73,9 +73,7 @@ class MultiHeadAttention(nn.Module):
         x = x.transpose(1, 2).contiguous().view(n_batches, -1, self.h * self.d_k)
         return self.linear(x)
 
-    def attention(self, query: torch.FloatTensor, key: torch.FloatTensor,
-                  value: torch.FloatTensor, mask: torch.Tensor = None,
-                  dropout: nn.Dropout = None) -> (torch.FloatTensor, torch.FloatTensor):
+    def attention(self, query, key, value, mask=None, dropout=None):
         d_k = query.size(-1)
         # (QK^T)/sqrt(d_k)
         scores = torch.matmul(query, key.transpose(-2, -1)) / math.sqrt(d_k)

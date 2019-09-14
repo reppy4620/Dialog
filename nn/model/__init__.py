@@ -1,1 +1,1 @@
-from .encoder_decoder import Seq2SeqModel
+from .encoder_decoder import EncoderDecoder
