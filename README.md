@@ -2,13 +2,32 @@
 Dialog is japanese chatbot project.  
 Seq2Seq model has BERT Encoder and Transformer Decoder.
 
-Note that you have to prepare the conversation data,
-download pretrained model from [this](https://drive.google.com/drive/folders/1Zsm9DD40lrUVu6iAnIuTH2ODIkh-WM-O)
-and change path in config.py
-if you wanna train using this code.  
+Note that this seq2seq model cannot use conversation history.  
+Hence if you wanna train the model that can consider long-dependency about conversation,
+I encourage to use RNN base model.  
+But I think Recurrence mechanism found in Transformer-XL may help to acquire long-dependency.  
+If you have the solution about this, please write in issues.
 
 I started training in (12/9/2019) with 1 GTX1080Ti.  
-In training, i'm able to use 256 batch size with 12 token.
+In training, I'm able to use 256 batch size with 12 token.
+
+[Article](https://qiita.com/reppy4620/items/e4305f22cd8f6962e00a) written in Japanese.
+
+# Result
+20epochs
+
+![Result](./result/result.png)
+
+This model has still contain the problem about dull response.  
+To solve this problem i'm researching now.  
+
+Then I found the paper tackled this problem.
+
+[Another Diversity-Promoting Objective Function for Neural Dialogue Generation](https://arxiv.org/abs/1811.08100)
+
+Authors belong to the Nara Institute of Science and Technology a.k.a NAIST.  
+They propose the new object function of Neural dialogue generation.  
+I hope that this method can help me to solve that problem.  
 
 # Usage
 ### Install packages.  
