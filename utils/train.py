@@ -31,13 +31,12 @@ def train(config, model, optimizer, criterion, data_loader,
         }, f'{config.output_dir}/{config.fn}.pth')
         print('*** Saved Model ***')
 
-        if epoch != 0 and epoch % 10 == 0:
-            torch.save({
-                'epoch': epoch,
-                'model': model.state_dict(),
-                'opt': optimizer.state_dict(),
-                'param': optimizer.parameters()
-            }, f'{config.output_dir}/{config.fn}_{epoch}.pth')
+        torch.save({
+            'epoch': epoch,
+            'model': model.state_dict(),
+            'opt': optimizer.state_dict(),
+            'param': optimizer.parameters()
+        }, f'{config.output_dir}/{config.fn}_{epoch}.pth')
 
         model.eval()
         evaluate(config, 'おはよう', sp_model, model, device)

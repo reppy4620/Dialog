@@ -2,8 +2,7 @@ import torch
 import torch.nn as nn
 
 
-# カルバックライブラーによりモデルの出力とターゲットの分布からロスを計算
-# その時LabelSmoothingを使用する
+# use KLDiveLoss to calculate loss from probability ditsribution.
 class LabelSmoothing(nn.Module):
     def __init__(self, size, pad_id, smoothing=0.0):
         super(LabelSmoothing, self).__init__()
