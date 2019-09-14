@@ -6,10 +6,10 @@ from .encoder import Encoder
 from .generator import Generator
 
 
-class Seq2SeqModel(nn.Module):
+class EncoderDecoder(nn.Module):
     def __init__(self, bert_model_dir, vocab_size=32000, h=8,
                  d_model=768, N=6, d_ff=2048, drop_rate=0.1, max_len=12):
-        super(Seq2SeqModel, self).__init__()
+        super(EncoderDecoder, self).__init__()
 
         self.target_emb = build_embedding(vocab_size, d_model, drop_rate, max_len=max_len)
 
