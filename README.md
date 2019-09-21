@@ -35,7 +35,7 @@ I hope that this method can help me to solve that problem.
 $ pip install -r requirements.txt
 ```
 requirements.txt includes redundant packages.  
-Maybe, Needed packages are
+Mainly needed packages are
 
 - pytorch
 - pytorch-transformers
