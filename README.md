@@ -38,14 +38,14 @@ requirements.txt includes redundant packages.
 Mainly needed packages are
 
 - pytorch
-- pytorch-transformers
+- huggingface/transformers
 - sentencepiece
 - tqdm
 
 If occur errors because of package, please install missing package.
 
 ### Download Pretrained model
-Download -> [Pretrained BERT model and trained SentencePiece model](https://drive.google.com/drive/folders/1Zsm9DD40lrUVu6iAnIuTH2ODIkh-WM-O)  
+Download -> [Pretrained BERT model and trained SentencePiece model](https://drive.google.com/open?id=1p_Pxmhn-sIrdtaVIM3-8YtbIiztSQE55)  
 and change path in config.py
 
 ### Prepare conversation data.  
@@ -60,6 +60,9 @@ and change path in config.py
 # q is input sentence, a is target sentence.
 [(q1, a1), (q2, a2), (q3, a3), ...]
 ```
+I think you don't feel like collecting data.
+So I open the traing data to the public.
+
 training data:  [this](https://drive.google.com/open?id=1VAL11Bv0sTo05x4ZeYpW7WXCWLkdwiJW)  
 Please use pkl data if you wanna train.
 - Change path in config.py
