@@ -28,7 +28,7 @@ def train(config, model, optimizer, criterion, data_loader,
             'model': model.state_dict(),
             'opt': optimizer.state_dict(),
             'param': optimizer.parameters()
-        }, f'{config.output_dir}/{config.fn}.pth')
+        }, f'{config.data_dir}/{config.fn}.pth')
         print('*** Saved Model ***')
 
         evaluate(config, 'もう疲れたー', tokenizer, model, device)
