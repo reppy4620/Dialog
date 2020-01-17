@@ -1,27 +1,26 @@
-import sentencepiece as spm
 import torch
 
 from config import Config
-from nn import EncoderDecoder
-from utils import evaluate, seed_everything
+from nn import build_model
+from tokenizer import Tokenizer
+from utils import evaluate
 
 if __name__ == '__main__':
 
-    seed_everything(Config.seed)
+    device = torch.device(Config.device)
 
-    cuda = True
-    device = torch.device('cuda' if cuda else 'cpu')
+    state_dict = torch.load(f'{Config.output_dir}/{Config.fn}.pth')
 
-    sp_model = spm.SentencePieceProcessor()
-    sp_model.Load('./pretrained/wiki-ja.model')
+    tokenizer = Tokenizer.from_pretrained(Config.model_name)
 
-    model = EncoderDecoder(bert_model_dir='./pretrained').to(device)
-    model.load(torch.load('./models/ckpt.pth')['model'])
+    model = build_model(Config).to(device)
+    model.load_state_dict(state_dict['model'])
+    model.eval()
+    model.freeze()
 
     while True:
         s = input('You>')
         if s == 'q':
             break
         print('BOT>', end='')
-        evaluate(Config, s, sp_model, model, device)
-        print()
+        text = evaluate(Config, s, tokenizer, model, device, True)

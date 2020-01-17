@@ -1,26 +1,31 @@
 class Config:
-    seed = 42
-    cuda = True
+    seed = 116
+    device = 'cuda'
 
-    bos_id = 4
-    eos_id = 5
-    pad_id = 3
-    start_id = 7
+    n_epoch = 30
+    batch_size = 128
+    max_len = 22
 
-    n_epoch = 20
-    batch_size = 256
-    max_len = 12
+    vocab_size = 32000
+    num_head = 8
+    d_model = 768
+    num_layer = 6
+    d_ff = 2048
+    drop_rate = 0.1
 
     smoothing = 0.1
     factor = 2
     warmup = 4000
 
-    output_dir = './models'
+    output_dir = 'gdrive/My Drive/partner'
+    # output_dir = 'D:/dialog/models'
+    pickle_path = f'{output_dir}/train_data.pkl'
     fn = 'ckpt'
 
     load = False
+    use_pickle = True
 
-    bert_path = './pretrained'
-    sp_path = './pretrained/wiki-ja.model'
+    model_name = 'bert-base-japanese-whole-word-masking'
 
-    train_data_path = './data/txt_pkl/train_data_10.pkl'
+    train_data_path = 'gdrive/My Drive/partner/training_data_22.txt'
+    # train_data_path = 'D:/dialog/data/txt_pkl/training_data_22.txt'

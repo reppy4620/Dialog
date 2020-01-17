@@ -6,13 +6,13 @@ from .eval import evaluate
 
 
 def train(config, model, optimizer, criterion, data_loader,
-          sp_model, device, start_epoch):
+          tokenizer, device, start_epoch):
     for epoch in range(start_epoch, config.n_epoch):
         model.train()
         with tqdm(total=len(data_loader), desc=f'Epoch: {epoch + 1}') as pbar:
             for i, (x, y) in enumerate(data_loader):
                 optimizer.zero_grad()
-                batch = Batch(x.to(device), y.to(device), pad=3)
+                batch = Batch(x.to(device), y.to(device), pad=tokenizer.pad_token_id)
                 out = model(batch.source, batch.source_mask,
                             batch.target, batch.target_mask)
                 loss = criterion(out.contiguous().view(-1, out.size(-1)),
@@ -22,7 +22,7 @@ def train(config, model, optimizer, criterion, data_loader,
 
                 pbar.update(1)
                 pbar.set_postfix_str(f'Loss: {loss.item():.5f}')
-
+        # Difference is file name.
         torch.save({
             'epoch': epoch,
             'model': model.state_dict(),
@@ -31,12 +31,4 @@ def train(config, model, optimizer, criterion, data_loader,
         }, f'{config.output_dir}/{config.fn}.pth')
         print('*** Saved Model ***')
 
-        torch.save({
-            'epoch': epoch,
-            'model': model.state_dict(),
-            'opt': optimizer.state_dict(),
-            'param': optimizer.parameters()
-        }, f'{config.output_dir}/{config.fn}_{epoch}.pth')
-
-        model.eval()
-        evaluate(config, 'おはよう', sp_model, model, device)
+        evaluate(config, 'もう疲れたー', tokenizer, model, device)

@@ -8,9 +8,6 @@ I encourage to use RNN base model.
 But I think Recurrence mechanism found in Transformer-XL may help to acquire long-dependency.  
 If you have the solution about this, please write in issues.
 
-I started training in (12/9/2019) with 1 GTX1080Ti.  
-In training, I'm able to use 256 batch size with 12 token.
-
 [Article](https://qiita.com/reppy4620/items/e4305f22cd8f6962e00a) written in Japanese.
 
 # Result
@@ -30,27 +27,18 @@ They propose the new object function of Neural dialogue generation.
 I hope that this method can help me to solve that problem.  
 
 # Usage
-### Install packages.  
-```bash
-$ pip install -r requirements.txt
-```
-requirements.txt includes redundant packages.  
-Mainly needed packages are
+### Install packages.
+Maybe, Needed packages are
 
 - pytorch
-- huggingface/transformers
-- sentencepiece
+- transformers
 - tqdm
 
 If occur errors because of package, please install missing package.
 
-### Download Pretrained model
-Download -> [Pretrained BERT model and trained SentencePiece model](https://drive.google.com/open?id=1p_Pxmhn-sIrdtaVIM3-8YtbIiztSQE55)  
-and change path in config.py
-
 ### Prepare conversation data.  
 
-- I used twitter data that is scraped using [this](https://qiita.com/gacky01/items/89c6c626848417391438)
+- I used twitter data that is scraped using [this](https://qiita.com/gacky01/items/89c6c626848417391438) script.
 
 - Normalized sentence(e.g. remove punctuations...) and encode to ids using SentencePiece.
 
@@ -60,9 +48,8 @@ and change path in config.py
 # q is input sentence, a is target sentence.
 [(q1, a1), (q2, a2), (q3, a3), ...]
 ```
-I think you don't feel like collecting data.
-So I open the traing data to the public.
 
+#### My Dataset
 training data:  [this](https://drive.google.com/open?id=1VAL11Bv0sTo05x4ZeYpW7WXCWLkdwiJW)  
 Please use pkl data if you wanna train.
 - Change path in config.py
@@ -76,7 +63,7 @@ Please use pkl data if you wanna train.
 - Loss: KLDivLoss with LabelSmoothing
 - Optimizer: Adam with warm-up
 
-- Tokenizer: SentencePiece(trained wiki-japanese)
+- Tokenizer: BertJapaneseTokenizer
 
 Idea of Loss and Optimizer comes from The Annotated Transformer i denote below.
 
