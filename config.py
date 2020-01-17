@@ -17,8 +17,7 @@ class Config:
     factor = 2
     warmup = 4000
 
-    output_dir = 'gdrive/My Drive/partner'
-    # output_dir = 'D:/dialog/models'
+    output_dir = 'D:/dialog/models'
     pickle_path = f'{output_dir}/train_data.pkl'
     fn = 'ckpt'
 
@@ -27,5 +26,4 @@ class Config:
 
     model_name = 'bert-base-japanese-whole-word-masking'
 
-    train_data_path = 'gdrive/My Drive/partner/training_data_22.txt'
-    # train_data_path = 'D:/dialog/data/txt_pkl/training_data_22.txt'
+    train_data_path = 'D:/dialog/data/txt_pkl/training_data_22.txt'
