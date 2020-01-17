@@ -42,15 +42,16 @@ If occur errors because of package, please install missing package.
 
 - Normalized sentence(e.g. remove punctuations...) and encode to ids using SentencePiece.
 
-- Convert to pkl from sentence pair  
+- Convert to pkl from sentence pair
 ```
-# architecture
+# pickle data architecture
 # q is input sentence, a is target sentence.
+# Type: List<Tuple(String, String)>
 [(q1, a1), (q2, a2), (q3, a3), ...]
 ```
 
 #### My Dataset
-training data:  [this](https://drive.google.com/open?id=1VAL11Bv0sTo05x4ZeYpW7WXCWLkdwiJW)  
+training data:  [this](https://drive.google.com/open?id=1wYrUQHb4Wg2T8ZvCleIBcGu7PTaFw6VO)  
 Please use pkl data if you wanna train.
 - Change path in config.py
 
