@@ -9,7 +9,7 @@ if __name__ == '__main__':
 
     device = torch.device(Config.device)
 
-    state_dict = torch.load(f'{Config.output_dir}/{Config.fn}.pth')
+    state_dict = torch.load(f'{Config.data_dir}/{Config.fn}.pth')
 
     tokenizer = Tokenizer.from_pretrained(Config.model_name)
 

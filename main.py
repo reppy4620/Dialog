@@ -17,8 +17,8 @@ logging.basicConfig(level=logging.INFO)
 if __name__ == '__main__':
     logging.info('*** Initializing ***')
 
-    if not os.path.isdir(Config.output_dir):
-        os.mkdir(Config.output_dir)
+    if not os.path.isdir(Config.data_dir):
+        os.mkdir(Config.data_dir)
 
     seed_everything(Config.seed)
     device = torch.device(Config.device)
