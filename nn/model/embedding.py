@@ -41,6 +41,6 @@ class PositionalEncoding(nn.Module):
         # i wanna save this parameter as state_dict parameter
         self.register_buffer('pe', pe)
 
-    def forward(self, x: torch.FloatTensor) -> torch.FloatTensor:
+    def forward(self, x: torch.FloatTensor) -> torch.Tensor:
         x = x + self.pe[:, x.size(1), :]
         return self.dropout(x)

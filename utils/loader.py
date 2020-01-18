@@ -13,6 +13,9 @@ class BalancedDataLoader(BatchSampler):
         self.count = 0
 
     def __iter__(self):
+        return self
+
+    def __next__(self):
         src_list = list()
         tgt_list = list()
         # sampler is RandomSampler
