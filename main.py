@@ -8,7 +8,7 @@ import torch.optim as optim
 from config import Config
 from nn import build_model, LabelSmoothing, get_optimizer
 from tokenizer import Tokenizer
-from utils import (DialogDataset, train,
+from utils import (DialogDataset, one_cycle, evaluate,
                    seed_everything, BalancedDataLoader,
                    make_train_data_from_txt)
 
@@ -44,5 +44,8 @@ if __name__ == '__main__':
     loader = BalancedDataLoader(dataset, tokenizer.pad_token_id)
 
     logging.info('Start Training')
-    train(Config, model, optimizer, criterion, loader,
-          tokenizer, device, start_epoch)
+    for epoch in range(start_epoch, Config.n_epoch):
+        one_cycle(epoch, Config, model, optimizer, criterion,
+                  BalancedDataLoader(dataset, tokenizer.pad_token_id),
+                  tokenizer, device)
+        evaluate(Config, 'もう疲れたー', tokenizer, model, device)

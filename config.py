@@ -1,6 +1,6 @@
 class Config:
     seed = 116
-    device = 'cuda'
+    device = 'cpu'
 
     n_epoch = 30
     batch_size = 128
