@@ -41,7 +41,6 @@ if __name__ == '__main__':
     else:
         train_data = make_train_data_from_txt(Config, tokenizer)
     dataset = DialogDataset(train_data, tokenizer)
-    loader = BalancedDataLoader(dataset, tokenizer.pad_token_id)
 
     logging.info('Start Training')
     for epoch in range(start_epoch, Config.n_epoch):
