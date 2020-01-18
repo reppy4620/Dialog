@@ -20,8 +20,6 @@ def one_cycle(epoch, config, model, optimizer, criterion, data_loader,
 
             pbar.update(1)
             pbar.set_postfix_str(f'Loss: {loss.item():.5f}')
-            break
-    # Difference is file name.
     torch.save({
         'epoch': epoch,
         'model': model.state_dict(),
