@@ -3,11 +3,10 @@ import os
 import pickle
 
 import torch
-import torch.nn as nn
 import torch.optim as optim
 
 from config import Config
-from nn import build_model, get_optimizer
+from nn import build_model, get_optimizer, ITFLoss
 from tokenizer import Tokenizer
 from utils import (DialogDataset, one_cycle, evaluate,
                    seed_everything, BalancedDataLoader,
@@ -41,8 +40,8 @@ if __name__ == '__main__':
 
     logging.info('Define Loss and Optimizer')
     # criterion = LabelSmoothing(tokenizer.vocab_size, pad_id=tokenizer.pad_token_id, smoothing=Config.smoothing)
-    # criterion = ITFLoss(itf)
-    criterion = nn.CrossEntropyLoss()
+    criterion = ITFLoss(itf)
+    # criterion = nn.CrossEntropyLoss(reduction='none')
     _opt = optim.Adam(model.parameters(), lr=0, betas=(0.9, 0.98), eps=1e-9)
     optimizer = get_optimizer(_opt, factor=Config.factor, warmup=Config.warmup)
 

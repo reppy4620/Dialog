@@ -25,6 +25,6 @@ def one_cycle(epoch, config, model, optimizer, criterion, data_loader,
         'model': model.state_dict(),
         'opt': optimizer.state_dict(),
         'param': optimizer.parameters(),
-        'loss': criterion.parameters()
+        'loss': criterion.state_dict()
     }, f'{config.data_dir}/{config.fn}.pth')
     print('*** Saved Model ***')
