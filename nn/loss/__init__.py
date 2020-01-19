@@ -1,1 +1,1 @@
-from .loss import LabelSmoothing
+from .loss import LabelSmoothing, ITFLoss

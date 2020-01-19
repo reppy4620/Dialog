@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 
 
-# カリバックライブラーぢアバージェンスによる損失関数
+# カルバックライブラーダイバージェンスによる損失関数
 # 加えてLabelSmoothingを使用
 class LabelSmoothing(nn.Module):
     def __init__(self, size, pad_id, smoothing=0.0):
@@ -25,3 +25,16 @@ class LabelSmoothing(nn.Module):
             t_dist.index_fill_(0, mask.squeeze(), 0.0)
         self.true_dist = t_dist
         return self.criterion(x, t_dist.clone())
+
+
+# Inverse Token Frequency Loss
+class ITFLoss(nn.Module):
+    def __init__(self, itf: torch.Tensor):
+        super(ITFLoss, self).__init__()
+        self.loss = nn.CrossEntropyLoss(reduction='none', ignore_index=0)
+        self.register_buffer('itf', itf)
+
+    def forward(self, pred, tgt):
+        loss = self.loss(pred, tgt)
+        itf = self.itf[tgt].type_as(loss)
+        return itf * loss

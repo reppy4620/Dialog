@@ -23,5 +23,5 @@ def evaluate(config, input_seq, tokenizer, model, device, verbose=True):
     ys = ys.view(-1).detach().cpu().numpy().tolist()[1:]
     text = tokenizer.decode(ys)
     if verbose:
-        print(tokenizer.decode(ys))
+        print(f'COM: {tokenizer.decode(ys)}')
     return text
