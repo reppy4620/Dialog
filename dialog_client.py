@@ -17,7 +17,7 @@ if __name__ == '__main__':
 
     device = torch.device(Config.device)
 
-    state_dict = torch.load(f'{Config.data_dir}/best.pth')
+    state_dict = torch.load(f'{Config.data_dir}/ckpt_1.pth')
 
     tokenizer = Tokenizer.from_pretrained(Config.model_name)
 
@@ -40,4 +40,4 @@ if __name__ == '__main__':
                 log = index
                 out = evaluate(Config, text, tokenizer, model, device, verbose=True)
                 requests.post(root + '/dialog_send', data={'message': out})
-        sleep(5)
+        sleep(1)

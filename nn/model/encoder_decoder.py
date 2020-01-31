@@ -17,7 +17,7 @@ def build_model(config):
 
 class EncoderDecoder(nn.Module):
     def __init__(self, bert_model_name, vocab_size=32000, h=8,
-                 d_model=768, N=6, d_ff=2048, drop_rate=0.1, max_len=12):
+                 d_model=768, N=6, d_ff=2048, drop_rate=0.1, max_len=22):
         super(EncoderDecoder, self).__init__()
 
         self.target_emb = build_embedding(vocab_size, d_model, drop_rate, max_len=max_len)
@@ -42,6 +42,10 @@ class EncoderDecoder(nn.Module):
     def freeze(self):
         for p in self.parameters():
             p.requires_grad = False
+
+    def unfreeze(self):
+        for p in self.parameters():
+            p.requires_grad = True
 
     def forward(self, source, source_mask, target, target_mask):
         x = self.encode(source, source_mask)

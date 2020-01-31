@@ -2,8 +2,6 @@ import torch
 import torch.nn as nn
 
 
-# カルバックライブラーダイバージェンスによる損失関数
-# 加えてLabelSmoothingを使用
 class LabelSmoothing(nn.Module):
     def __init__(self, size, pad_id, smoothing=0.0):
         super(LabelSmoothing, self).__init__()

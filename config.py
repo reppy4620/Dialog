@@ -2,8 +2,8 @@ class Config:
     seed = 116
     device = 'cuda'
 
-    n_epoch = 30
-    batch_size = 128
+    n_epoch = 100
+    batch_size = 64
     max_len = 22
 
     vocab_size = 32000
@@ -12,6 +12,7 @@ class Config:
     num_layer = 6
     d_ff = 2048
     drop_rate = 0.1
+    max_grad_norm = 1.0
 
     smoothing = 0.1
     factor = 2
@@ -22,10 +23,10 @@ class Config:
     pickle_path = f'{data_dir}/train_data.pkl'
     fn = 'ckpt'
 
-    load = False
+    load = True
     # FIXME: if you use original data, change flag of this
     use_pickle = True
 
     model_name = 'bert-base-japanese-whole-word-masking'
 
-    train_data_path = f'{data_dir}/training_data_22.txt'
+    train_data_path = f'{data_dir}/final.txt'

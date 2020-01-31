@@ -3,10 +3,11 @@ import os
 import pickle
 
 import torch
+import torch.nn as nn
 import torch.optim as optim
 
 from config import Config
-from nn import build_model, get_optimizer, ITFLoss
+from nn import build_model
 from tokenizer import Tokenizer
 from utils import (DialogDataset, one_cycle, evaluate,
                    seed_everything, BalancedDataLoader,
@@ -37,17 +38,22 @@ if __name__ == '__main__':
 
     logging.info('Define Models')
     model = build_model(Config).to(device)
+    model.unfreeze()
 
     logging.info('Define Loss and Optimizer')
-    # criterion = LabelSmoothing(tokenizer.vocab_size, pad_id=tokenizer.pad_token_id, smoothing=Config.smoothing)
-    criterion = ITFLoss(itf)
-    # criterion = nn.CrossEntropyLoss(reduction='none')
-    _opt = optim.Adam(model.parameters(), lr=0, betas=(0.9, 0.98), eps=1e-9)
-    optimizer = get_optimizer(_opt, factor=Config.factor, warmup=Config.warmup)
+    criterion = nn.CrossEntropyLoss(reduction='none')
+    optimizer = optim.AdamW(model.parameters(), lr=1e-3, betas=(0.9, 0.98), eps=1e-9)
+
+    if Config.load:
+        state_dict = torch.load(f'{Config.data_dir}/ckpt_1.pth')
+        start_epoch = 10
+        print(f'Start Epoch: {start_epoch}')
+        model.load_state_dict(state_dict['model'])
+        optimizer.load_state_dict(state_dict['opt'])
 
     logging.info('Start Training')
     for epoch in range(start_epoch, Config.n_epoch):
         one_cycle(epoch, Config, model, optimizer, criterion,
                   BalancedDataLoader(dataset, tokenizer.pad_token_id),
                   tokenizer, device)
-        evaluate(Config, 'もう疲れたー', tokenizer, model, device)
+        evaluate(Config, 'おはよーーー', tokenizer, model, device)

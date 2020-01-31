@@ -39,7 +39,12 @@ def make_itf(data, voc_size):
     for (inp, tgt) in data:
         counter.update(Counter(inp))
         counter.update(Counter(tgt))
-    itf = [1] * voc_size
+    itf = [0] * voc_size
     for k, v in counter.items():
-        itf[k] = 1 / v
+        if v > 1000000:
+            itf[k] = 100 / v
+        elif 100000 < v < 1000000:
+            itf[k] = 10 / v
+        else:
+            itf[k] = 1 / v
     return torch.FloatTensor(itf)

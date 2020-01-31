@@ -19,9 +19,6 @@ class AttentionLayer(nn.Module, ABC):
 class SelfAttention(AttentionLayer):
 
     def forward(self, x, target_mask):
-        # out = self.multi_attn(x, x, x, target_mask)
-        # out = self.dropout(out)
-        # out = self.norm(x + out)
         out = self.norm(x)
         out = self.multi_attn(out, out, out, target_mask)
         out = self.dropout(out)
