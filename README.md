@@ -46,8 +46,19 @@ if you wanna get more conversation data, please use get_tweet.py
 
 Note that you need to change consumer_key and access_token in order to use this script because of using Twitter api.
 
+##### Usage of get_tweet.py
+```bash
+$ python get_tweet.py "query" "Continuation count"
+Example
+$ python get_tweet.py それは草 5
+```
+if you execute the Example command, script start to collect consecutive 5 sentences if last sentence contains "それは草".
+
 ### Excecute
-- run main.py
+if you are ready to start training, run the main script.
+```bash
+$ python main.py
+```
 
 # Architecture
 - Encoder: [BERT](https://arxiv.org/abs/1810.04805)  
