@@ -29,4 +29,4 @@ class Config:
 
     model_name = 'bert-base-japanese-whole-word-masking'
 
-    train_data_path = f'{data_dir}/final.txt'
+    train_data_path = f'{data_dir}/training_data.txt'

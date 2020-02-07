@@ -1,17 +1,15 @@
 # Dialog
 Dialog is japanese chatbot project.  
-Seq2Seq model has BERT Encoder and Transformer Decoder.
+Used architecture in this project is Seq2Seq model that has BERT Encoder and Transformer Decoder.
 
-Note that this seq2seq model cannot use conversation history.  
-Hence if you wanna train the model that can consider long-dependency about conversation,
-I encourage to use RNN-base model.  
+Note that this seq2seq model cannot use information of conversation history.  
 But I think Recurrence mechanism described in Transformer-XL may help to acquire long-dependency.  
 If you have the solution about this, please write in issues.
 
 [Article](https://qiita.com/reppy4620/items/e4305f22cd8f6962e00a) written in Japanese.
 
 # Result
-1epochs
+2epochs
 
 ![Result](./result/result.png)
 
@@ -44,6 +42,10 @@ training data:  [this](https://drive.google.com/open?id=1wYrUQHb4Wg2T8ZvCleIBcGu
 Please use pkl data if you wanna train.
 - Change path in config.py
 
+if you wanna get more conversation data, please use get_tweet.py
+
+Note that you need to change consumer_key and access_token in order to use this script because of using Twitter api.
+
 ### Excecute
 - run main.py
 
@@ -56,9 +58,8 @@ Please use pkl data if you wanna train.
 
 - Tokenizer: BertJapaneseTokenizer
 
-Idea of Loss and Optimizer comes from The Annotated Transformer i denote below.
 
-If you want more information about architecture of BERT or Transformer, please refer to the following blog.
+If you want more information about architecture of BERT or Transformer, please refer to the following article.
 
 - [The Annotated Transformer](http://nlp.seas.harvard.edu/2018/04/03/attention.html)
 - [The Illustrated Transformer](http://jalammar.github.io/illustrated-transformer/)
