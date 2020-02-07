@@ -33,7 +33,7 @@ class BertEncoder(BertModel):
             raise ValueError("Wrong shape for input_ids (shape {}) or attention_mask (shape {})".format(input_shape,
                                                                                                         attention_mask.shape))
 
-        extended_attention_mask = extended_attention_mask.to(dtype=next(self.parameters()).dtype)  # fp16 compatibility
+        extended_attention_mask = extended_attention_mask.to(dtype=next(self.parameters()).dtype)
         extended_attention_mask = (1.0 - extended_attention_mask) * -10000.0
 
         encoder_extended_attention_mask = None

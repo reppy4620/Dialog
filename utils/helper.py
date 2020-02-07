@@ -1,6 +1,7 @@
 import os
 import pickle
 import random
+from collections import Counter
 
 import numpy as np
 import torch
@@ -31,3 +32,19 @@ def make_train_data_from_txt(config, tokenizer):
     with open(f'{config.pickle_path}', 'wb') as f:
         pickle.dump(data, f)
     return data
+
+
+def make_itf(data, voc_size):
+    counter = Counter()
+    for (inp, tgt) in data:
+        counter.update(Counter(inp))
+        counter.update(Counter(tgt))
+    itf = [0] * voc_size
+    for k, v in counter.items():
+        if v > 1000000:
+            itf[k] = 100 / v
+        elif 100000 < v < 1000000:
+            itf[k] = 10 / v
+        else:
+            itf[k] = 1 / v
+    return torch.FloatTensor(itf)

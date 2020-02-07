@@ -27,7 +27,7 @@ class Embeddings(nn.Module):
 
 class PositionalEncoding(nn.Module):
 
-    def __init__(self, d_model, drop_rate, max_len=5000):
+    def __init__(self, d_model, drop_rate, max_len=512):
         super(PositionalEncoding, self).__init__()
         self.dropout = nn.Dropout(drop_rate)
 

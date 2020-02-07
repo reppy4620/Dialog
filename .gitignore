@@ -266,3 +266,5 @@ dmypy.json
 .pyre/
 
 .idea
+dialog_client.py
+test.py
