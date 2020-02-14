@@ -44,18 +44,17 @@ Please use pkl data if you wanna train.
 
 if you wanna get more conversation data, please use get_tweet.py
 
-Note that you need to change consumer_key and access_token in order to use this script because of using Twitter api.
-
 ##### Usage of get_tweet.py
+Note that you need to change consumer_key and access_token in order to use this script because of using Twitter api.
 ```bash
-$ python get_tweet.py "query" "Continuation count"
+$ python get_tweet.py "query" "Num of utterances"
 Example
-$ python get_tweet.py それは草 5
+$ python get_tweet.py 私は 5
 ```
 if you execute the Example command, script start to collect consecutive 5 sentences if last sentence contains "それは草".
 
 ### Excecute
-if you are ready to start training, run the main script.
+if you're ready to start training, run the main script.
 ```bash
 $ python main.py
 ```
