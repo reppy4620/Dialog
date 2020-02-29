@@ -19,14 +19,13 @@ class Config:
     warmup = 4000
 
     # FIXME: Data path must be changed.
-    data_dir = 'D:/dialog/models'
+    data_dir = './models'
+    train_data_path = f'{data_dir}/training_data.txt'
     pickle_path = f'{data_dir}/train_data.pkl'
     fn = 'ckpt'
 
-    load = True
+    load = False
     # FIXME: if you use original data, change flag of this
-    use_pickle = True
+    use_pickle = False
 
     model_name = 'bert-base-japanese-whole-word-masking'
-
-    train_data_path = f'{data_dir}/training_data.txt'

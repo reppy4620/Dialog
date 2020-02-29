@@ -32,6 +32,8 @@ Maybe, Needed packages are
 - transformers
 - tqdm
 - Mecab
+- neologdn
+- emoji
 
 If occur errors because of the packages, please install missing packages.
 
@@ -42,7 +44,7 @@ training data:  [this](https://drive.google.com/open?id=1wYrUQHb4Wg2T8ZvCleIBcGu
 Please use pkl data if you wanna train.
 - Change path in config.py
 
-if you wanna get more conversation data, please use get_tweet.py
+If you wanna get more conversation data, please use get_tweet.py
 
 ##### Usage of get_tweet.py
 Note that you need to change consumer_key and access_token in order to use this script because of using Twitter api.
@@ -51,7 +53,13 @@ $ python get_tweet.py "query" "Num of utterances"
 Example
 $ python get_tweet.py 私は 5
 ```
-if you execute the Example command, script start to collect consecutive 5 sentences if last sentence contains "それは草".
+If you execute the Example command, script start to collect consecutive 5 sentences if last sentence contains "私は".
+
+Then execute following command.
+```bash
+$ python make_training_data.py
+```
+This script makes training data, just like the name.
 
 ### Excecute
 if you're ready to start training, run the main script.

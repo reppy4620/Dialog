@@ -1,7 +1,7 @@
 import datetime
 import json
-import re
 import os
+import re
 import sys
 import time
 from socket import error as SocketError
@@ -35,7 +35,6 @@ class TweetData:
         self.cnt += 1
 
 
-# tweet_idから時刻情報を取得する
 def tweet_id2time(tweet_id):
     id_bin = bin(tweet_id >> 22)
     tweet_time = int(id_bin, 2)
@@ -43,16 +42,13 @@ def tweet_id2time(tweet_id):
     return tweet_time
 
 
-# 発話tweet本文取得
 def get_tweet(res, start_time):
     res_text = json.loads(res.text)
     url = 'https://api.twitter.com/1.1/statuses/lookup.json'
 
-    cnt_req = 0
     max_tweet = start_time
     tweets = list()
 
-    # 候補を絞る
     for tweet in res_text['statuses']:
         status_id = tweet['in_reply_to_status_id_str']
         tweet_id = tweet['id']
@@ -89,7 +85,6 @@ def get_tweet(res, start_time):
                 continue
 
             if req.status_code == 503:
-                # 503 : Service Unavailable
                 if unavailable_cnt > 10:
                     raise Exception('Twitter API error %d' % res.status_code)
 
@@ -105,7 +100,6 @@ def get_tweet(res, start_time):
                 raise Exception('Twitter API error %d' % res.status_code)
 
         idx_list = list()
-        # 発話tweet本文スクリーニング
         for i in range(0, len(tweets)):
             for j in range(0, len(req_text)):
                 if req_text[j]['id_str'] == tweets[i].last_status_id:
@@ -127,14 +121,11 @@ def get_tweet(res, start_time):
     return max_tweet, len(tweets), tweets
 
 
-# tweet本文スクリーニング
 def screening(text):
     s = text
 
-    # RTを外す
     if s[0:3] == "RT ":
         s = s.replace(s[0:3], "")
-    # @screen_nameを外す
     while s.find("@") != -1:
         index_at = s.find("@")
         if s.find(" ") != -1:
@@ -146,38 +137,29 @@ def screening(text):
         else:
             s = s.replace(s[index_at:], "")
 
-    # 改行を外す
     while s.find("\n") != -1:
         index_ret = s.find("\n")
         s = s.replace(s[index_ret], "")
     s = s.replace('\n', '')
 
-    # URLを外す
     s = re.sub(r'https?://[\w/:%#\$&\?\(\)~\.=\+\-…]+', "", s)
-    # 絵文字を「。」に置き換え その１
     non_bmp_map = dict.fromkeys(range(0x10000, sys.maxunicode + 1), '')
     s = s.translate(non_bmp_map)
-    # 絵文字を「。」に置き換え　その２
     s = ''.join(c if c not in emoji.UNICODE_EMOJI else '' for c in s)
 
-    # 置き換えた「。」が連続していたら１つにまとめる
     s = re.sub('。+', '。', s)
 
-    # ハッシュタグを外す
     while s.find('#') != -1:
         index_hash = s.find('#')
         s = s[0:index_hash]
 
-    # 正規化
-    s = neologdn.normalize(s, repeat=2)
+    s = neologdn.normalize(s, repeat=4)
 
-    # 最終的に文字などのみにする
     s = re.sub(r'[^、。!?ー〜1-9a-zA-Zぁ-んァ-ヶ亜-腕纊-黑一-鿕]', '', s)
 
     return s
 
 
-# 回数制限を問合せ、アクセス可能になるまで wait する
 def check_limit(session):
     unavailable_cnt = 0
     url = "https://api.twitter.com/1.1/application/rate_limit_status.json"
@@ -221,7 +203,6 @@ def check_limit(session):
     return reset
 
 
-# sleep処理　resetで指定した時間スリープする
 def wait_until_reset(reset):
     seconds = reset - time.mktime(datetime.datetime.now().timetuple())
     seconds = max(seconds, 0)
@@ -229,18 +210,14 @@ def wait_until_reset(reset):
     print('     == waiting %d sec ==' % seconds)
     print('     =====================')
     sys.stdout.flush()
-    time.sleep(seconds + 10)  # 念のため + 10 秒
+    time.sleep(seconds + 10)
 
 
-# 回数制限情報取得
 def get_limit_context(res_text):
-    # searchの制限情報
     remaining_search = res_text['resources']['search']['/search/tweets']['remaining']
     reset1 = res_text['resources']['search']['/search/tweets']['reset']
-    # lookupの制限情報
     remaining_user = res_text['resources']['statuses']['/statuses/lookup']['remaining']
     reset2 = res_text['resources']['statuses']['/statuses/lookup']['reset']
-    # 制限情報取得の制限情報
     remaining_limit = res_text['resources']['application']['/application/rate_limit_status']['remaining']
     reset3 = res_text['resources']['application']['/application/rate_limit_status']['reset']
 
@@ -263,7 +240,6 @@ if __name__ == '__main__':
 
     session = OAuth1Session(CK, CS, AT, AS)
 
-    # tweet取得処理
     total = -1
     total_count = 0
     cnt = 0
@@ -276,9 +252,8 @@ if __name__ == '__main__':
 
     start_time = 1288834974657
     while True:
-        # 回数制限を確認
         reset = check_limit(session)
-        get_time = time.mktime(datetime.datetime.now().timetuple())  # getの時刻取得
+        get_time = time.mktime(datetime.datetime.now().timetuple())
         try:
             res = session.get(url, params={'q': args[1], 'count': 100})
         except SocketError as e:
@@ -291,7 +266,6 @@ if __name__ == '__main__':
             continue
 
         if res.status_code == 503:
-            # 503 : Service Unavailable
             if unavailableCnt > 10:
                 raise Exception('Twitter API error %d' % res.status_code)
 
@@ -305,7 +279,6 @@ if __name__ == '__main__':
         if res.status_code != 200:
             raise Exception('Twitter API error %d' % res.status_code)
 
-        # 取得したtweetに対する発話取得とファイル書き込み
         start_time, count, tweets = get_tweet(res, start_time)
 
         fn = f'{save_dir}/tweet_data_{args[1]}_{DIALOG_CNT}.txt'
@@ -321,6 +294,5 @@ if __name__ == '__main__':
         print('total_count=', total_count, 'start_time=', start_time)
 
         current_time = time.mktime(datetime.datetime.now().timetuple())
-        # 処理時間が2秒未満なら2秒wait
         if current_time - get_time < 2:
             wait_until_reset(time.mktime(datetime.datetime.now().timetuple()) + 2)
