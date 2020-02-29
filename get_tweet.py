@@ -1,6 +1,7 @@
 import datetime
 import json
 import re
+
 import sys
 import time
 from socket import error as SocketError
@@ -267,7 +268,11 @@ if __name__ == '__main__':
     total_count = 0
     cnt = 0
     unavailableCnt = 0
+    save_dir = './data'
     url = 'https://api.twitter.com/1.1/search/tweets.json'
+    
+    if not os.path.isdir(save_dir):
+        os.mkdir(save_dir)
 
     start_time = 1288834974657
     while True:
@@ -303,7 +308,7 @@ if __name__ == '__main__':
         # 取得したtweetに対する発話取得とファイル書き込み
         start_time, count, tweets = get_tweet(res, start_time)
 
-        fn = f'data/tweet_data_{args[1]}_{DIALOG_CNT}.txt'
+        fn = f'{save_dir}/tweet_data_{args[1]}_{DIALOG_CNT}.txt'
 
         with open(fn, 'a', encoding='utf-8') as f:
             for i in range(0, len(tweets)):
