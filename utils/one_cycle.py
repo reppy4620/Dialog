@@ -20,6 +20,13 @@ def one_cycle(epoch, config, model, optimizer, criterion, data_loader,
             clip_grad_norm_(model.parameters(), config.max_grad_norm)
             pbar.update(1)
             pbar.set_postfix_str(f'Loss: {loss.item():.5f}')
+    # always overwrite f'{config.data_dir}/{config.fn}.pth'
+    torch.save({
+        'epoch': epoch,
+        'model': model.state_dict(),
+        'opt': optimizer.state_dict()
+    }, f'{config.data_dir}/{config.fn}.pth')
+    # not overwrite
     torch.save({
         'epoch': epoch,
         'model': model.state_dict(),

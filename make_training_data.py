@@ -22,8 +22,8 @@ if __name__ == '__main__':
     not_use = 0
     tokenizer = BertJapaneseTokenizer.from_pretrained('bert-base-japanese-whole-word-masking')
     file_name = f'training_data'
-    with open(f'./{file_name}.txt', 'a', encoding='utf-8') as ff:
-        files = glob.glob('./data/*.txt')
+    with open(f'./data/{file_name}.txt', 'a', encoding='utf-8') as ff:
+        files = glob.glob('./data/tweet_data_*.txt')
         num_files = len(files)
         for f_num, fn in enumerate(files, start=1):
             num_uttr = int(fn.split('/')[-1].split('.')[0].split('_')[-1]) + 1

@@ -42,10 +42,10 @@ if __name__ == '__main__':
 
     logging.info('Define Loss and Optimizer')
     criterion = nn.CrossEntropyLoss(reduction='none')
-    optimizer = optim.AdamW(model.parameters(), lr=1e-3, betas=(0.9, 0.98), eps=1e-9)
+    optimizer = optim.AdamW(model.parameters(), lr=Config.lr, betas=Config.betas, eps=1e-9)
 
     if Config.load:
-        state_dict = torch.load(f'{Config.data_dir}/ckpt_1.pth')
+        state_dict = torch.load(f'{Config.data_dir}/{Config.fn}.pth')
         start_epoch = 10
         print(f'Start Epoch: {start_epoch}')
         model.load_state_dict(state_dict['model'])
