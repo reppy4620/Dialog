@@ -7,7 +7,7 @@ Note that this encoder-decoder model cannot use information of conversation hist
 [Article](https://qiita.com/reppy4620/items/e4305f22cd8f6962e00a) written in Japanese.
 
 # News
-####Added colab notebooks.  
+#### Added colab notebooks.  
 You can run training and evaluation script on google colab without building environment.  
 Please click following link.  
 Note that in training notebook, download command is described in the end of note, but it hasn't tested yet.
