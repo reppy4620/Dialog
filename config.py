@@ -2,7 +2,7 @@ class Config:
     seed = 116
     device = 'cuda'
 
-    n_epoch = 10
+    n_epoch = 3
     batch_size = 64
     max_len = 22
     lr = 1e-3

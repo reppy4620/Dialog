@@ -6,6 +6,16 @@ Note that this encoder-decoder model cannot use information of conversation hist
 
 [Article](https://qiita.com/reppy4620/items/e4305f22cd8f6962e00a) written in Japanese.
 
+# News
+####Added colab notebooks.  
+You can run training and evaluation script on google colab without building environment.  
+Please click following link.  
+Note that in training notebook, download command is described in the end of note, but it hasn't tested yet.
+Therefore if you run training notebook and cannot download a trained weight file, please download manually.
+
+- Train: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/reppy4620/Dialog/blob/master/notebooks/Dialog_Training.ipynb)
+- Eval : [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/reppy4620/Dialog/blob/master/notebooks/Dialog_Evaluation.ipynb)
+
 # Contents
 1. [Result](#result)
 2. [PreTrained Model](#pretrained-model)
