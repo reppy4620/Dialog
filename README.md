@@ -7,7 +7,7 @@ Note that this encoder-decoder model cannot use information of conversation hist
 [Article](https://qiita.com/reppy4620/items/e4305f22cd8f6962e00a) written in Japanese.
 
 # News
-#### Added colab notebooks.  
+### Added colab notebooks.  
 You can run training and evaluation script on google colab without building environment.  
 Please click following link.  
 Note that in training notebook, download command is described in the end of note, but it hasn't tested yet.
@@ -16,7 +16,7 @@ Therefore if you run training notebook and cannot download a trained weight file
 - Train: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/reppy4620/Dialog/blob/master/notebooks/Dialog_Training.ipynb)
 - Eval : [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/reppy4620/Dialog/blob/master/notebooks/Dialog_Evaluation.ipynb)
 
-#### Text-to-Speech Examples
+### Text-to-Speech Examples
 [blog](https://jweb.asia/26-it/ai/51-bert-chatbot.html) written in japanese
 
 @ycat3 created text-to-speech example by using this project for sentence generation and Parallel Wavenet for speech synthesis.
