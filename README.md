@@ -16,6 +16,15 @@ Therefore if you run training notebook and cannot download a trained weight file
 - Train: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/reppy4620/Dialog/blob/master/notebooks/Dialog_Training.ipynb)
 - Eval : [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/reppy4620/Dialog/blob/master/notebooks/Dialog_Evaluation.ipynb)
 
+#### Text-to-Speech Examples
+[blog](https://jweb.asia/26-it/ai/51-bert-chatbot.html) written in japanese
+
+@ycat3 created text-to-speech example by using this project for sentence generation and Parallel Wavenet for speech synthesis.
+Source code doesn't share, but you can reproduce it if you leverage Parallel Wavenet.
+That blog has some audio samples, so please try listening to it.
+
+I'd like to create app allowing us to talk with AI in voice by using speech synthesis and speech recognition if I have a lot of free time, but now I can't do it due to preparing for exams...
+
 # Contents
 1. [Result](#result)
 2. [PreTrained Model](#pretrained-model)
