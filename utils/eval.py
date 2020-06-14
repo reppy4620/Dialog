@@ -5,9 +5,6 @@ from .helper import subsequent_mask
 
 def evaluate(config, input_seq, tokenizer, model, device, verbose=True):
     model.eval()
-    if input_seq == '' and verbose:
-        print(f'なんか言えよ')
-        return 'なんか言えよ'
     ids = tokenizer.encode(input_seq)
     src = torch.tensor(ids, dtype=torch.long, device=device).view(1, -1)
     src_mask = torch.ones(src.size(), dtype=torch.long, device=device)
@@ -25,7 +22,6 @@ def evaluate(config, input_seq, tokenizer, model, device, verbose=True):
             ys = torch.cat([ys, torch.ones(1, 1).type_as(ys).fill_(next_word).long()], dim=1)
     ys = ys.view(-1).detach().cpu().numpy().tolist()[1:]
     text = tokenizer.decode(ys)
-    text = text.replace('開眼の闇気功師ロウbot', '')
     if verbose:
         print(f'{text}')
     return text
