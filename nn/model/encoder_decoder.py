@@ -1,4 +1,3 @@
-import torch
 import torch.nn as nn
 
 from .decoder import build_decoder
@@ -49,8 +48,6 @@ class EncoderDecoder(nn.Module):
 
     def forward(self, source, source_mask, target, target_mask):
         x = self.encode(source, source_mask)
-        x = torch.cat([x, x.clone()], dim=1)
-        source_mask = torch.cat([source_mask, source_mask.clone()], dim=1)
         x = self.decode(x, source_mask, target, target_mask)
         x = self.generate(x)
         return x
