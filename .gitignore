@@ -268,3 +268,4 @@ dmypy.json
 .idea
 dialog_client.py
 test.py
+data

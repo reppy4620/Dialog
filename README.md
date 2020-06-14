@@ -154,7 +154,7 @@ And then, execute following commands.
 $ python get_tweet.py "query" "Num of continuous utterances"
 
 # Example
-# This works until occurs errors 
+# This command works until occurs errors 
 # and makes a file named "tweet_data_私は_5.txt" in "./data"
 $ python get_tweet.py 私は 5
 ```
