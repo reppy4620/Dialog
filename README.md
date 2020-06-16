@@ -73,7 +73,6 @@ Example if you use conda.
 
 ```bash
 # create new environment
-# version >= 3.6
 $ conda create -n dialog python=3.7
 
 # activate new environment
@@ -85,12 +84,12 @@ $ conda install pytorch torchvision cudatoolkit={YOUR_VERSION} -c pytorch
 # install rest of depending package except for MeCab
 $ pip install transformers tqdm neologdn emoji
 
-##### Installed MeCab #####
+##### Already installed MeCab #####
 ### Ubuntu ###
 $ pip install mecab-python3
 
 ### Windows ###
-# and added "path/to/MeCab/bin" to system envrionment variable
+# check that "path/to/MeCab/bin" are added to system envrionment variable
 $ pip install mecab-python-windows
 
 ##### Not Installed MeCab #####
@@ -104,8 +103,9 @@ $ aptitude install mecab libmecab-dev mecab-ipadic-utf8 git make curl xz-utils f
 $ pip install mecab-python3
 
 ### Windows ###
-# if you've already installed MeCab from https://github.com/ikegami-yukino/mecab/releases/tag/v0.996
-# and add "path/to/Mecab/bin" to system environment variable, run the following command.
+# Install MeCab from https://github.com/ikegami-yukino/mecab/releases/tag/v0.996
+# and add "path/to/Mecab/bin" to system environment variable.
+# then run the following command.
 $ pip install mecab-python-windows
 ```
 
