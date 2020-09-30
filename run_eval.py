@@ -7,9 +7,10 @@ from utils import evaluate
 
 if __name__ == '__main__':
 
-    device = torch.device(Config.device)
+    # device = torch.device(Config.device)
+    device = torch.device('cpu')
 
-    state_dict = torch.load(f'{Config.data_dir}/{Config.fn}.pth')
+    state_dict = torch.load(f'{Config.data_dir}/{Config.fn}.pth', map_location=device)
 
     tokenizer = Tokenizer.from_pretrained(Config.model_name)
 

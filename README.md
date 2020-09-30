@@ -2,7 +2,8 @@
 **Dialog** is japanese chatbot project.  
 Used architecture in this project is EncoderDecoder model that has BERT Encoder and Transformer Decoder.
 
-Note that this model cannot use information of conversation history.  
+**Note that this model still has divergence problem**  
+One of the reason is that training data has a lot of biases.
 
 [Article](https://qiita.com/reppy4620/items/e4305f22cd8f6962e00a) written in Japanese.
 
