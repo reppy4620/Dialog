@@ -269,3 +269,5 @@ dmypy.json
 dialog_client.py
 test.py
 data
+
+lightning_logs

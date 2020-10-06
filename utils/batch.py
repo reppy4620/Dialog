@@ -1,6 +1,11 @@
+import numpy as np
 import torch
 
-from .helper import subsequent_mask
+
+def subsequent_mask(size: int) -> torch.ByteTensor:
+    attn_shape = (1, size, size)
+    mask = np.triu(np.ones(attn_shape), k=1).astype(np.uint8)
+    return torch.ByteTensor(mask == 0)
 
 
 class Batch:

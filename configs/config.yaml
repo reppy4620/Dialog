@@ -1,0 +1,27 @@
+seed: 42
+
+n_epochs: 10
+batch_size: 128
+gradient_clip: 5.0
+
+train_ratio: 0.99
+
+max_len: 22
+model_name: "ALINEAR/albert-japanese-v2"
+
+use_pickle: false
+
+preprocess:
+  min_size: 2
+  max_size: 22
+  num_use_uttr: 2
+
+optimizer:
+  lr: 0.001
+
+decoder:
+  vocab_size: 32000
+  num_head: 8
+  d_model: 768
+  n_layers: 6
+  d_ff: 2048

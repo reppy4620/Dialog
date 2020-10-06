@@ -1,59 +1,52 @@
-import logging
-import os
-import pickle
+import pathlib
+from argparse import ArgumentParser
 
-import torch
-import torch.nn as nn
-import torch.optim as optim
+import pytorch_lightning as pl
+from pytorch_lightning.callbacks import ModelCheckpoint
+from pytorch_lightning.utilities.seed import seed_everything
 
-from config import Config
-from nn import build_model
+from dataset import DialogDataModule
+from nn import DialogModule
 from tokenizer import Tokenizer
-from utils import (DialogDataset, one_cycle, evaluate,
-                   seed_everything, BalancedDataLoader,
-                   make_train_data_from_txt, make_itf)
-
-logging.basicConfig(level=logging.INFO)
+from utils import get_config, load_from_pkl, load_from_txt
 
 if __name__ == '__main__':
-    logging.info('*** Initializing ***')
 
-    if not os.path.isdir(Config.data_dir):
-        os.mkdir(Config.data_dir)
+    parser = ArgumentParser()
+    parser.add_argument('-c', '--config_path', type=str, default='configs/config.yaml')
+    parser.add_argument('-d', '--data_dir', type=str, default='./data')
+    parser.add_argument('-f', '--train_fn', type=str, default='train_data')
+    parser.add_argument('-m', '--model_dir', type=str, default='./data/models')
+    args = parser.parse_args()
 
-    seed_everything(Config.seed)
-    device = torch.device(Config.device)
+    config = get_config(args.config_path)
+    config.data_dir = args.data_dir
+    config.train_fn = args.train_fn
+    config.model_dir = args.model_dir
 
-    start_epoch = 0
-    tokenizer = Tokenizer.from_pretrained(Config.model_name)
+    seed_everything(config.seed)
 
-    logging.info('Preparing training data')
-    if Config.use_pickle:
-        with open(f'{Config.pickle_path}', 'rb') as f:
-            train_data = pickle.load(f)
+    tokenizer = Tokenizer(config.model_name)
+
+    if config.use_pickle:
+        data = load_from_pkl(config)
     else:
-        train_data = make_train_data_from_txt(Config, tokenizer)
-    itf = make_itf(train_data, Config.vocab_size)
-    dataset = DialogDataset(train_data, tokenizer)
+        data = load_from_txt(config, tokenizer, make_pkl=True)
+    dm = DialogDataModule(data, config, tokenizer)
 
-    logging.info('Define Models')
-    model = build_model(Config).to(device)
-    model.unfreeze()
+    model = DialogModule(config, tokenizer, dm.itf)
 
-    logging.info('Define Loss and Optimizer')
-    criterion = nn.CrossEntropyLoss(reduction='none')
-    optimizer = optim.AdamW(model.parameters(), lr=Config.lr, betas=Config.betas, eps=1e-9)
+    model_dir = pathlib.Path(config.model_dir)
+    if not model_dir.exists():
+        model_dir.mkdir(parents=True)
+    save_fn = str(model_dir / 'dialog_{epoch:02d}-{val_loss:.6f}')
+    mc = ModelCheckpoint(filepath=save_fn, save_last=True, save_top_k=5)
 
-    if Config.load:
-        state_dict = torch.load(f'{Config.data_dir}/{Config.fn}.pth')
-        start_epoch = 10
-        print(f'Start Epoch: {start_epoch}')
-        model.load_state_dict(state_dict['model'])
-        optimizer.load_state_dict(state_dict['opt'])
-
-    logging.info('Start Training')
-    for epoch in range(start_epoch, Config.n_epoch):
-        one_cycle(epoch, Config, model, optimizer, criterion,
-                  BalancedDataLoader(dataset, tokenizer.pad_token_id),
-                  tokenizer, device)
-        evaluate(Config, 'おはよーーー', tokenizer, model, device)
+    trainer = pl.Trainer(
+        gpus=1,
+        checkpoint_callback=mc,
+        max_epochs=config.n_epochs,
+        deterministic=True,
+        gradient_clip_val=config.gradient_clip,
+    )
+    trainer.fit(model=model, datamodule=dm)

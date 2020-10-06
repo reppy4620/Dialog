@@ -9,6 +9,6 @@ class Generator(nn.Module):
         super(Generator, self).__init__()
         self.layer = nn.Linear(d_model, vocab)
 
-    def forward(self, x: torch.FloatTensor) -> torch.FloatTensor:
+    def forward(self, x: torch.FloatTensor) -> torch.Tensor:
         x = F.log_softmax(self.layer(x), dim=-1)
         return x

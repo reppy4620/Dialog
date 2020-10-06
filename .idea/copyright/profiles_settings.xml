@@ -1,3 +1,8 @@
 <component name="CopyrightManager">
-  <settings default="Reppy" />
+  <settings default="Reppy">
+    <LanguageOptions name="Python">
+      <option name="fileTypeOverride" value="1" />
+      <option name="block" value="false" />
+    </LanguageOptions>
+  </settings>
 </component>

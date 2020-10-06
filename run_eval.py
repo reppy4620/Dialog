@@ -1,27 +1,34 @@
+from argparse import ArgumentParser
+
 import torch
 
-from config import Config
-from nn import build_model
+from nn import DialogModule
 from tokenizer import Tokenizer
-from utils import evaluate
+from utils import get_config
 
 if __name__ == '__main__':
 
-    # device = torch.device(Config.device)
-    device = torch.device('cpu')
+    parser = ArgumentParser()
+    parser.add_argument('--config_path', type=str, default='configs/config.yaml')
+    parser.add_argument('--ckpt_path', type=str, default='data/last.ckpt')
+    parser.add_argument('--device_type', type=str, default='cpu')
+    args = parser.parse_args()
 
-    state_dict = torch.load(f'{Config.data_dir}/{Config.fn}.pth', map_location=device)
+    config = get_config(args.config_path)
 
-    tokenizer = Tokenizer.from_pretrained(Config.model_name)
+    if args.device_type != 'cpu' and args.device_type != 'cuda':
+        raise ValueError('Please set device_type to cpu or cuda')
+    device = torch.device(args.device_type)
 
-    model = build_model(Config).to(device)
-    model.load_state_dict(state_dict['model'])
-    model.eval()
-    model.freeze()
+    tokenizer = Tokenizer(config.model_name)
+
+    model = DialogModule(config, tokenizer)
+    model = model.load_from_checkpoint(args.ckpt_path, params=config, tokenizer=tokenizer, itf=None)
 
     while True:
         s = input('You>')
         if s == 'q':
             break
         print('BOT>', end='')
-        text = evaluate(Config, s, tokenizer, model, device, True)
+        text = model(s)
+        print(text)

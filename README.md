@@ -8,6 +8,15 @@ One of the reason is that training data has a lot of biases.
 [Article](https://qiita.com/reppy4620/items/e4305f22cd8f6962e00a) written in Japanese.
 
 # News
+
+### Rewrite whole training flow
+I've been thinking that it's too dirty to read this code step by step.
+Therefore, I rewrite whole traning flow with PyTorchLightning.  
+According to this, the command to run training and evaluation scripts is changed.
+Please refer to the Usage.  
+It makes code easy to read, I think....
+
+
 ### Added colab notebooks.  
 You can run training and evaluation script on google colab without building environment.  
 Please click following link.  
@@ -52,8 +61,8 @@ They propose the new objective function of Neural dialogue generation.
 I hope that this method can help me to solve that problem.
 
 # Pretrained Model
-- Pretrained model : ckpt.pth
-- Training data : training_data.txt or train_data.pkl
+- Pretrained model : last.ckpt
+- Training data : train_data.txt or train_data.pkl
 
 in [google drive](https://drive.google.com/open?id=1wYrUQHb4Wg2T8ZvCleIBcGu7PTaFw6VO).
 
@@ -124,9 +133,13 @@ data_dir = 'path/to/dir_contains_training_data'
 ```
 
 ### Excecute
-if you're ready to start training, run the main script.
+if you're ready to start training, run the main script.  
 ```bash
-$ python main.py
+# Example
+$ python main.py --config_path configs/config.yaml \
+                 --data_dir ./data \
+                 --train_fn train_data \
+                 --model_dir ./data/models
 ```
 
 ## Evaluate
@@ -139,7 +152,10 @@ data_dir = 'path/to/dir_contains_pretrained'
 ```
 - run eval.py
 ```shell script
-$ python run_eval.py
+# Example
+$ python run_eval.py --config_path configs/config.yaml \
+                     --ckpt_path ./data/last.ckpt \
+                     --device_type cpu
 ```
 
 
@@ -174,7 +190,7 @@ This script makes training data using './data/tweet_data_*.txt', just like the n
 - Encoder: [BERT](https://arxiv.org/abs/1810.04805)  
 - Decoder: [Vanilla Transformer's Decoder](https://arxiv.org/abs/1706.03762)
 
-- Loss: CrossEntropy
+- Loss: CrossEntropy or ITFLoss(refer to [Another Diversity-Promoting Objective Function for Neural Dialogue Generation](https://arxiv.org/abs/1811.08100))
 - Optimizer: AdamW
 
 - Tokenizer: BertJapaneseTokenizer

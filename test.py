@@ -1,26 +1,22 @@
-import pickle
+def partial_test():
+    import functools
+    from dataset.collate_fn import collate_fn
 
-from config import Config
-from tokenizer import Tokenizer
-from utils import make_itf
-from utils import make_train_data_from_txt
+    _collate_fn = functools.partial(collate_fn, pad_id=1)
+    print([list(range(1, 5)), list(range(6, 10))])
+    _collate_fn([[list(range(1, 5)), list(range(6, 10))]])
 
 
-def test_itf():
-    tokenizer = Tokenizer.from_pretrained(Config.model_name)
-    if Config.use_pickle:
-        with open(f'{Config.pickle_path}', 'rb') as f:
-            train_data = pickle.load(f)
-    else:
-        train_data = make_train_data_from_txt(Config, tokenizer)
-    counter, itf = make_itf(train_data, Config.vocab_size, tokenizer)
-    # itf = (itf - itf.min()) / (itf.max() - itf.min())
-    # for i in range(itf.size(0)):
-    #     print(i, itf[i])
-    # itf[itf == 0] += 1e-6
-    for k, v in counter.most_common(len(counter)):
-        print(tokenizer.decode([k]), v)
+def model_test():
+    from nn import build_model
+    from utils import get_config
+    config = get_config('configs/config.yaml')
+    model = build_model(config)
+    print(f'num of params: {len(list(model.parameters()))}')
+    params = [p for p in model.parameters() if p.requires_grad]
+    print(f'num of learnable params: {len(params)}')
+    print(model)
 
 
 if __name__ == '__main__':
-    test_itf()
+    model_test()
