@@ -15,7 +15,7 @@ def load_from_pkl(params) -> list:
     return data
 
 
-def load_from_txt(params, tokenizer, make_pkl=True):
+def load_from_txt(params, tokenizer, make_pkl=False):
     p = Path(f'{params.data_dir}/{params.train_fn}.txt')
     if not p.exists():
         raise FileExistsError(f'Please check {str(p)} is exists.')
@@ -24,6 +24,7 @@ def load_from_txt(params, tokenizer, make_pkl=True):
     data = list()
     with open(str(p), 'r', encoding='utf-8') as f:
         lines = f.readlines()
+    # lines = lines[:3000]
     for i in tqdm(range(0, len(lines) - 1, 3)):
         data.append([tokenizer.encode(x) for x in lines[i:i + 2]])
     if make_pkl:

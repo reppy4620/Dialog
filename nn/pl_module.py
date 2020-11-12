@@ -1,10 +1,10 @@
 import pytorch_lightning as pl
 import torch
+import torch.optim as optim
 
-from optim import RAdam
-from utils import Batch, AttributeDict, subsequent_mask
+from utils import Batch, AttributeDict
 from .loss import ITFLoss
-from .model import build_model
+from .model import DialogModel
 
 
 class DialogModule(pl.LightningModule):
@@ -18,7 +18,7 @@ class DialogModule(pl.LightningModule):
 
         self.tokenizer = tokenizer
 
-        self.model = build_model(params)
+        self.model = DialogModel(params)
 
         if itf is None:
             itf = torch.zeros(tokenizer.vocab_size)
@@ -26,18 +26,15 @@ class DialogModule(pl.LightningModule):
 
     def forward(self, input_seq: str):
         device = next(self.model.parameters()).device
-        self.freeze()
         ids = self.tokenizer.encode(input_seq)
         src = torch.tensor(ids, dtype=torch.long, device=device)[None, :]
-        src_mask = torch.ones(src.size(), dtype=torch.long, device=device)
-        mem = self.model.encode(src, src_mask)
         ys = torch.tensor([self.tokenizer.cls_token_id], dtype=torch.long, device=device)[None, :]
+
         with torch.no_grad():
+            mem = self.model.encode(src, None)
             for i in range(self.hparams.max_len - 1):
-                out = self.model.decode(mem, src_mask,
-                                        ys, subsequent_mask(ys.size(1)).type_as(ys))
-                prob = self.model.generate(out[:, -1])
-                _, candidate = prob.topk(5, dim=1)
+                out = self.model.decode(ys, mem, None, None)
+                _, candidate = out[:, -1].topk(5, dim=-1)
                 next_word = torch.tensor([candidate[:, 0]], dtype=torch.long, device=device)[None, :]
                 if next_word.item() == self.tokenizer.sep_token_id:
                     break
@@ -49,31 +46,30 @@ class DialogModule(pl.LightningModule):
     def training_step(self, _batch, batch_idx):
         src, tgt = _batch
         batch = Batch(src, tgt, self.tokenizer.pad_token_id)
-        out = self.model(batch.source, batch.source_mask,
-                         batch.target, batch.target_mask)
+        out = self.model(batch.source, batch.target,
+                         batch.source_mask, batch.target_mask)
         loss = self.criterion(out.transpose(1, 2), batch.target_y).mean()
 
-        result = pl.TrainResult(loss)
-        result.log_dict({
+        self.log_dict({
             'train_loss': loss,
         }, on_epoch=True)
 
-        return result
+        return loss
 
     def validation_step(self, _batch, batch_idx):
         src, tgt = _batch
         batch = Batch(src, tgt, self.tokenizer.pad_token_id)
-        out = self.model(batch.source, batch.source_mask,
-                         batch.target, batch.target_mask)
+        out = self.model(batch.source, batch.target,
+                         batch.source_mask, batch.target_mask)
         loss = self.criterion(out.transpose(1, 2), batch.target_y).mean()
 
-        result = pl.EvalResult(checkpoint_on=loss)
-        result.log_dict({
-            'valid_loss': loss,
+        self.log_dict({
+            'val_loss': loss,
+            'step': self.global_step
         }, prog_bar=True)
 
-        return result
+        self.logger.experiment.add_text('generated_text', self.forward('おはよう'), global_step=self.global_step)
 
     def configure_optimizers(self):
         params = [p for p in self.model.parameters() if p.requires_grad]
-        return RAdam(params, lr=self.hparams.optimizer.lr)
+        return optim.AdamW(params, lr=self.hparams.optimizer.lr)

@@ -3,7 +3,7 @@ from argparse import ArgumentParser
 
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import ModelCheckpoint
-from pytorch_lightning.utilities.seed import seed_everything
+from pytorch_lightning.loggers import TensorBoardLogger
 
 from dataset import DialogDataModule
 from nn import DialogModule
@@ -24,14 +24,14 @@ if __name__ == '__main__':
     config.train_fn = args.train_fn
     config.model_dir = args.model_dir
 
-    seed_everything(config.seed)
+    pl.seed_everything(config.seed)
 
     tokenizer = Tokenizer(config.model_name)
 
     if config.use_pickle:
         data = load_from_pkl(config)
     else:
-        data = load_from_txt(config, tokenizer, make_pkl=True)
+        data = load_from_txt(config, tokenizer, make_pkl=config.make_pickle)
     dm = DialogDataModule(data, config, tokenizer)
 
     model = DialogModule(config, tokenizer, dm.itf)
@@ -40,13 +40,24 @@ if __name__ == '__main__':
     if not model_dir.exists():
         model_dir.mkdir(parents=True)
     save_fn = str(model_dir / 'dialog_{epoch:02d}-{val_loss:.6f}')
-    mc = ModelCheckpoint(filepath=save_fn, save_last=True, save_top_k=5)
+    mc = ModelCheckpoint(
+        filepath=save_fn,
+        save_last=True,
+        monitor='val_loss',
+        save_top_k=5
+    )
+
+    tb_logger = TensorBoardLogger(
+        save_dir=str(model_dir),
+        name='logs'
+    )
 
     trainer = pl.Trainer(
         gpus=1,
-        checkpoint_callback=mc,
+        callbacks=[mc],
+        logger=tb_logger,
         max_epochs=config.n_epochs,
         deterministic=True,
-        gradient_clip_val=config.gradient_clip,
+        gradient_clip_val=5.0,
     )
     trainer.fit(model=model, datamodule=dm)

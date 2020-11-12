@@ -8,10 +8,10 @@ def partial_test():
 
 
 def model_test():
-    from nn import build_model
     from utils import get_config
+    from nn import DialogModel
     config = get_config('configs/config.yaml')
-    model = build_model(config)
+    model = DialogModel(config)
     print(f'num of params: {len(list(model.parameters()))}')
     params = [p for p in model.parameters() if p.requires_grad]
     print(f'num of learnable params: {len(params)}')
