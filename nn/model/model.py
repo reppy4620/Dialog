@@ -14,7 +14,7 @@ class DialogModel(nn.Module):
             params,
             nn.Sequential(
                 self.encoder.net.embeddings,
-                nn.Linear(128, params.model.channel)
+                self.encoder.net.encoder.embedding_hidden_mapping_in
             )
         )
 
